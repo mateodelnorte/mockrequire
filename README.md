@@ -14,6 +14,8 @@ var db = require('my_db_lib');
 
 module.exports = function onboardUser (event) {
 
+  // we want to test this function's behavior, but need to isolate the behavior of the module apart from the behavior of it's dependency, the db. 
+
   db.User.findByEmail(event.email, function (err, user) {
     if(err) throw err;
 
@@ -33,34 +35,39 @@ The following example uses 'mocha' and 'should' to create a unit test for the mo
 ```
 require('mocha'),
 require('should');
-var mockrequire = require('mockrequire');
+var mockrequire = require('../index');
 
-var user = {
+var user = (function() {
+  return {
     save: function (cb) {
       cb(null);
       this.saved = true;
     }
   };
+})();
 
-var userPaymentComplete = mockrequire('../handlers/userPaymentComplete', {
-  'gochime.lib/datastore': {
-    User: function User () {
-      return {
-        findByEmail: function (email, cb){
-          cb(null, user);
-        }
-      };
+// instead of require()ing our handler directly, we can mockrequire() it and supply an object containing any child dependencies we would like to mock as well. Here we're mocking my_db_lib
+
+var onboardUser = mockrequire('./handler', {
+  'my_db_lib': {
+    User: { 
+      findByEmail: function (email, cb){
+        cb(null, user);
+      }
     }
   }
 });
 
+// we create our unit tests with mocha
+
 describe('userPaymentComplete()', function(){
   onboardUser({ email: 'fake@email.com' });
   it('should set onboarding as \'complete\'', function() {
-    user.should.have.property('onboarding').equal(true);
+    user.should.have.property('onboarding').equal('complete');
   });
   it('should save user', function() {
     user.should.have.property('saved').equal(true);
   });
 });
+
 ```
