@@ -19,7 +19,7 @@ module.exports = function(filePath, mocks, options) {
     fullFilePath = fullFilePath + suffix;
   }
 
-  var resolveModule = function(module) {
+  var resolve = function(module) {
     if (module.charAt(0) !== '.') return module;
     var resolvePath = path.dirname(filePath);
     var childPath = path.resolve(resolvePath, module);
@@ -31,7 +31,7 @@ module.exports = function(filePath, mocks, options) {
 
   var context = {
     require: function(name) {
-      return mocks[name] || require(resolveModule(name));
+      return mocks[name] || require(resolve(name));
     },
     console: console,
     exports: exports,
