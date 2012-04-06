@@ -35,7 +35,7 @@ The following example uses 'mocha' and 'should' to create a unit test for the mo
 ```
 require('mocha'),
 require('should');
-var mockrequire = require('../index');
+var mockrequire = require('mockrequire');
 
 var user = (function() {
   return {
