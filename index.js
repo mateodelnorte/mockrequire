@@ -10,8 +10,9 @@ var path = require('path');
  * @param {string} filePath Absolute path to module (file to load)
  * @param {Object=} mocks Hash of mocked dependencies
  */
-module.exports = function(filePath, mocks) {
+module.exports = function(filePath, mocks, options) {
   mocks = mocks || {};
+  options = options || { debug: false };
 
   var fullFilePath = process.env.PWD + '/' + filePath; 
   var suffix = '.js';
@@ -26,7 +27,7 @@ module.exports = function(filePath, mocks) {
     if (module.charAt(0) !== '.') return module;
     var resolvePath = path.dirname(filePath);
     var childPath = path.resolve(resolvePath, module);
-    console.log('childPath: ', childPath);
+    if (options.debug) console.log('childPath: ', childPath);
     return childPath;
   };
 
@@ -41,8 +42,7 @@ module.exports = function(filePath, mocks) {
       exports: exports
     }
   };
-
-  console.log('original path: ', fullFilePath);
+  if (options.debug) console.log('original path: ', fullFilePath);
   vm.runInNewContext(fs.readFileSync(fullFilePath), context);
   return context.module.exports;
 };
