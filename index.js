@@ -3,14 +3,12 @@ var fs = require('fs');
 var path = require('path');
 
 /**
- * Helper for unit testing:
- * - load module with mocked dependencies
- * - allow accessing private state of the module
- *
- * @param {string} filePath Absolute path to module (file to load)
- * @param {Object=} mocks Hash of mocked dependencies
+ * @param {string} relative path to module being loaded
+ * @param {Object} object representing mocks to be supplied to module being loaded. mocks will override child modules otherwise being loaded by require()
+ * @param {Object} options object for specifying debug mode 
  */
 module.exports = function(filePath, mocks, options) {
+
   mocks = mocks || {};
   options = options || { debug: false };
 
@@ -21,8 +19,6 @@ module.exports = function(filePath, mocks, options) {
     fullFilePath = fullFilePath + suffix;
   }
 
-  // this is necessary to allow relative filePath modules within loaded file
-  // i.e. requiring ./some inside file /a/b.js needs to be resolved to /a/some
   var resolveModule = function(module) {
     if (module.charAt(0) !== '.') return module;
     var resolvePath = path.dirname(filePath);
@@ -32,6 +28,7 @@ module.exports = function(filePath, mocks, options) {
   };
 
   var exports = {};
+
   var context = {
     require: function(name) {
       return mocks[name] || require(resolveModule(name));
@@ -42,7 +39,10 @@ module.exports = function(filePath, mocks, options) {
       exports: exports
     }
   };
+
   if (options.debug) console.log('original path: ', fullFilePath);
+
   vm.runInNewContext(fs.readFileSync(fullFilePath), context);
+
   return context.module.exports;
 };
