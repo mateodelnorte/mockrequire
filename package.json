@@ -1,0 +1,18 @@
+{
+  "author": "Matt Walters <mattwalters5@gmail.com>",
+  "name": "mockrequire",
+  "description": "Simple module for mocking required dependencies. Works with any testing suite.",
+  "version": "0.0.0",
+  "homepage": "https://github.com/mateodelnorte/mockrequire",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mateodelnorte/mockrequire.git"
+  },
+  "main": "index.js",
+  "engines": {
+    "node": "~0.6.9"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
