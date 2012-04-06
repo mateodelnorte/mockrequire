@@ -9,8 +9,10 @@ var user = {
     }
   };
 
-var userPaymentComplete = mockrequire('../handlers/userPaymentComplete', {
-  'gochime.lib/datastore': {
+// instead of require()ing our handler directly, we can mockrequire() it and supply an object containing any child dependencies we would like to mock as well. Here we're mocking my_db_lib
+
+var userPaymentComplete = mockrequire('./handler', {
+  'my_db_lib': {
     User: function User () {
       return {
         findByEmail: function (email, cb){
@@ -20,6 +22,8 @@ var userPaymentComplete = mockrequire('../handlers/userPaymentComplete', {
     }
   }
 });
+
+// we create our unit tests with mocha
 
 describe('userPaymentComplete()', function(){
   onboardUser({ email: 'fake@email.com' });
