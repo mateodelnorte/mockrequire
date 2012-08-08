@@ -25,7 +25,7 @@ var onboardUser = mockrequire('./handler', {
 
 // we create our unit tests with mocha
 
-describe('userPaymentComplete()', function(){
+describe('onboardUser()', function(){
   onboardUser({ email: 'fake@email.com' });
   it('should set onboarding as \'complete\'', function() {
     user.should.have.property('onboarding').equal('complete');

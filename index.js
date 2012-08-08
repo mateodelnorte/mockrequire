@@ -2,6 +2,9 @@ var vm = require('vm');
 var fs = require('fs');
 var path = require('path');
 
+var mochaRegExp = new RegExp(/mocha/),
+    testDirRegExp = new RegExp(/\/test$/);
+  
 /**
  * @param {string} relative path to module being loaded
  * @param {Object} object representing mocks to be supplied to module being loaded. mocks will override child modules otherwise being loaded by require()
@@ -11,6 +14,12 @@ module.exports = function(filePath, mocks, options) {
 
   mocks = mocks || {};
   options = options || { debug: false };
+
+  if( ! testDirRegExp.test(process.cwd()) 
+      && mochaRegExp.test(process.env._) 
+      && new RegExp(/^\.\./).test(filePath)) {
+    filePath = filePath.slice(1);
+  }
 
   var fullFilePath = process.env.PWD + '/' + filePath; 
   var suffix = '.js';
@@ -42,7 +51,16 @@ module.exports = function(filePath, mocks, options) {
 
   if (options.debug) console.log('original path: ', fullFilePath);
 
-  vm.runInNewContext(fs.readFileSync(fullFilePath), context);
+  try {
+    vm.runInNewContext(fs.readFileSync(fullFilePath), context);
+  } catch (err) {
+    if (mochaRegExp.test(process.env._)) {
+      vm.runInNewContext(fs.readFileSync(fullFilePath.replace('./','test/')), context);
+    }
+    else {
+      throw err;
+    }
+  }
 
   return context.module.exports;
 };
