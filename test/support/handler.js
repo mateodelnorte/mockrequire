@@ -1,6 +1,7 @@
-var db = require('my_db_lib');
+var db = require('my_db_lib'),
+    dep2 = require('./handler2');
 
-module.exports = function onboardUser (event) {
+module.exports.method = function onboardUser (event) {
 
   // we want to test this function's behavior, but need to isolate the behavior of the module apart from the behavior of it's dependency, the db. 
 
@@ -14,3 +15,7 @@ module.exports = function onboardUser (event) {
     });
   });
 };
+
+module.exports.childDependency = db;
+
+module.exports.childDependency2 = dep2;

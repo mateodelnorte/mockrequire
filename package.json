@@ -12,7 +12,13 @@
   "engines": {
     "node": "~0.6.9"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "debug": "0.7.2",
+    "stack-trace": "0.0.6"
+  },
+  "devDependencies": {
+    "mocha": "1.9.0",
+    "should": "1.2.2"
+  },
   "optionalDependencies": {}
 }
