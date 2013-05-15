@@ -8,6 +8,7 @@ module.exports = function (module, mocks) {
 
   mocks = mocks || {};
 
+  // 3rd object in stacktrace array is calling file
   var caller = stacktrace.get(this)[2].getFileName();
 
   log('preparing to mockrequire ' + module + ' from module ' + caller);
@@ -23,11 +24,11 @@ module.exports = function (module, mocks) {
     require: function (name) {
       if (mocks[name]) {
         log('loading mocked module ' + name + ' from parent module ' + module);
-        return mocks[name]
+        return mocks[name];
       }
       else {
         var file = path.join(path.dirname(caller), path.dirname(module), name);
-        log('loading module ' + file + ' from parent module ' + module);  
+        log('loading module ' + file + ' from parent module ' + module);
         return require(file);
       }
     },

@@ -12,7 +12,7 @@ var user = {
 
 // instead of require()ing our handler directly, we can mockrequire() it and supply an object containing any child dependencies we would like to mock as well. Here we're mocking my_db_lib
 var module = {
-    User: { 
+    User: {
       findByEmail: function (email, cb){
         cb(null, user);
       }
