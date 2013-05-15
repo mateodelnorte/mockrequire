@@ -28,6 +28,7 @@ var handler = mockrequire('./support/handler', {
 describe('mockrequire', function(){
   it('should load provided object instead of module\'s originally required dependency', function () {
     handler.childDependency.should.equal(module);
+    handler.childDependency2.should.equal(require('./support/handler2'));
 
     handler.method({ email: 'fake@email.com' });
 

@@ -1,4 +1,5 @@
-var db = require('my_db_lib');
+var db = require('my_db_lib'),
+    dep2 = require('./handler2');
 
 module.exports.method = function onboardUser (event) {
 
@@ -16,3 +17,5 @@ module.exports.method = function onboardUser (event) {
 };
 
 module.exports.childDependency = db;
+
+module.exports.childDependency2 = dep2;

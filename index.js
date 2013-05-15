@@ -1,50 +1,35 @@
 var fs = require('fs'),
     log = require('debug')('mockrequire'),
-    vm = require('vm'),
-    path = require('path');
+    path = require('path'),
+    stacktrace = require('stack-trace'),
+    vm = require('vm');
 
-var mochaRegExp = new RegExp(/mocha/),
-    testDirRegExp = new RegExp(/\/test$/);
-  
-/**
- * @param {string} relative path to module being loaded
- * @param {Object} object representing mocks to be supplied to module being loaded. mocks will override child modules otherwise being loaded by require()
- * @param {Object} options object for specifying debug mode 
- */
-module.exports = function (path, mocks) {
+module.exports = function (module, mocks) {
 
   mocks = mocks || {};
 
-  // if( ! testDirRegExp.test(process.cwd()) 
-  //     && mochaRegExp.test(process.env._) 
-  //     && new RegExp(/^\.\./).test(path)) {
-  //   log(path);
-  //   path = path.slice(1);
-  //   log(path);
-  // }
+  var caller = stacktrace.get(this)[2].getFileName();
 
-  var filepath = process.env.PWD + '/' + path, suffix = '.js';
+  log('preparing to mockrequire ' + module + ' from module ' + caller);
 
-  if (filepath.indexOf(suffix, filepath.length - suffix.length) === -1) {
-    filepath = filepath + suffix;
-  }
-
-  var resolve = function (module) {
+  var resolve = function (module, base) {
     if (module.charAt(0) !== '.') return module;
-    
-    var resolvePath = path.dirname(path);
-    var childPath = path.resolve(resolvePath, module);
-    
-    log('childPath: ' + childPath);
-    
-    return childPath;
+    return path.resolve(path.dirname(base), module) + '.js';
   };
 
   var exports = {};
 
   var sandbox = {
     require: function (name) {
-      return mocks[name] || require(resolve(name));
+      if (mocks[name]) {
+        log('loading mocked module ' + name + ' from parent module ' + module);
+        return mocks[name]
+      }
+      else {
+        var file = path.join(path.dirname(caller), path.dirname(module), name);
+        log('loading module ' + file + ' from parent module ' + module);  
+        return require(file);
+      }
     },
     console: console,
     exports: exports,
@@ -53,19 +38,11 @@ module.exports = function (path, mocks) {
     }
   };
 
-  log('original path: ' + filepath);
+  var filepath = resolve(module, caller);
 
-  try {
-    vm.runInNewContext(fs.readFileSync(filepath), sandbox);
-  } catch (err) {
-    if (mochaRegExp.test(process.env._)) {
-      log('mocha')
-      vm.runInNewContext(fs.readFileSync(filepath.replace('./','test/')), sandbox);
-    }
-    else {
-      throw err;
-    }
-  }
+  log('mockrequiring ' + filepath);
+
+  vm.runInNewContext(fs.readFileSync(filepath), sandbox);
 
   return sandbox.module.exports;
 };
