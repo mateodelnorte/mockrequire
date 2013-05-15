@@ -33,7 +33,7 @@ describe('mockrequire', function(){
 
     user.should.have.property('saved', true);
   });
-  it('should load non-mocked normally', function () {
+  it('should load non-mocked dependency normally', function () {
     handler.childDependency2.should.equal(require('./support/handler2'));
   });
 });
