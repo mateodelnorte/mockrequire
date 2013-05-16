@@ -1,0 +1,13 @@
+    <section class="suite">
+      <h1>mockrequire</h1>
+      <dl>
+        <dt>should load provided object instead of module's originally required dependency</dt>
+        <dd><pre><code>handler.childDependency.should.equal(module);
+
+handler.method({ email: 'fake@email.com' });
+
+user.should.have.property('saved', true);</code></pre></dd>
+        <dt>should load non-mocked dependency normally</dt>
+        <dd><pre><code>handler.childDependency2.should.equal(require('./support/handler2'));</code></pre></dd>
+      </dl>
+    </section>
