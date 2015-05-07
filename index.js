@@ -2,7 +2,8 @@ var fs = require('fs'),
     log = require('debug')('mockrequire'),
     path = require('path'),
     stacktrace = require('stack-trace'),
-    vm = require('vm');
+    vm = require('vm'),
+    extend = require('util')._extend;
 
 module.exports = function (module, mocks) {
 
@@ -32,12 +33,13 @@ module.exports = function (module, mocks) {
         return require(file);
       }
     },
-    console: console,
     exports: exports,
     module: {
       exports: exports
     }
   };
+
+  extend(sandbox, global);
 
   var filepath = resolve(module, caller);
 
