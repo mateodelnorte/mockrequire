@@ -2,9 +2,10 @@ var fs = require('fs'),
     log = require('debug')('mockrequire'),
     path = require('path'),
     stacktrace = require('stack-trace'),
-    vm = require('vm');
+    vm = require('vm'),
+    extend = require('util')._extend;
 
-module.exports = function (module, mocks) {
+module.exports = function (module, mocks, globals) {
 
   mocks = mocks || {};
 
@@ -38,6 +39,8 @@ module.exports = function (module, mocks) {
       exports: exports
     }
   };
+
+  if (!!globals) { extend(sandbox, globals); }
 
   var filepath = resolve(module, caller);
 
