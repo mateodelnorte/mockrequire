@@ -5,7 +5,7 @@ var fs = require('fs'),
     vm = require('vm'),
     extend = require('util')._extend;
 
-module.exports = function (module, mocks, globals) {
+module.exports = function (module, mocks) {
 
   mocks = mocks || {};
 
@@ -33,14 +33,13 @@ module.exports = function (module, mocks, globals) {
         return require(file);
       }
     },
-    console: console,
     exports: exports,
     module: {
       exports: exports
     }
   };
 
-  if (!!globals) { extend(sandbox, globals); }
+  extend(sandbox, global);
 
   var filepath = resolve(module, caller);
 
