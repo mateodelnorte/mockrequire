@@ -19,6 +19,16 @@ module.exports = function (module, mocks) {
     return path.resolve(path.dirname(base), module) + '.js';
   };
 
+  var findNodeModule = function(file, name) {
+    var modulesFolder = path.join(file, '../node_modules');
+    if(fs.existsSync(modulesFolder)){
+      return path.join(modulesFolder, name);
+    } else {
+      file = path.join(file, '../');
+      return findNodeModule(file, name);
+    }
+  };
+
   var exports = {};
 
   var sandbox = {
@@ -29,6 +39,10 @@ module.exports = function (module, mocks) {
       }
       else {
         var file = path.join(path.dirname(caller), path.dirname(module), name);
+        //check if its a node module if so find module in node_modules dir
+        if(name.charAt(0) !== '.') {
+          file = findNodeModule(file, name);
+        }
         log('loading module ' + file + ' from parent module ' + module);
         return require(file);
       }
