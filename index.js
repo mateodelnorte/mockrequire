@@ -5,7 +5,10 @@ var fs = require('fs'),
     vm = require('vm'),
     extend = require('util')._extend;
 
-module.exports = function (module, mocks) {
+module.exports = function (module, mocks, compiler) {
+
+  // allow specifying modules with shorthand when named index.js
+  if (module.slice(-1) === '/') { module = module + 'index' }
 
   mocks = mocks || {};
 
@@ -14,8 +17,12 @@ module.exports = function (module, mocks) {
 
   log('preparing to mockrequire ' + module + ' from module ' + caller);
 
+  var isNodeModule = function(module) {
+    return module[0] !== '.';
+  };
+
   var resolve = function (module, base) {
-    if (module.charAt(0) !== '.') return module;
+    if (isNodeModule(module)) return module;
     return path.resolve(path.dirname(base), module) + '.js';
   };
 
@@ -26,8 +33,10 @@ module.exports = function (module, mocks) {
       if (mocks[name]) {
         log('loading mocked module ' + name + ' from parent module ' + module);
         return mocks[name];
-      }
-      else {
+      } else if (isNodeModule(name)) {
+        log('loading node_module ' + file + ' from parent module ' + module);
+        return require(name);
+      } else {
         var file = path.join(path.dirname(caller), path.dirname(module), name);
         log('loading module ' + file + ' from parent module ' + module);
         return require(file);
@@ -44,8 +53,8 @@ module.exports = function (module, mocks) {
   var filepath = resolve(module, caller);
 
   log('mockrequiring ' + filepath);
-
-  vm.runInNewContext(fs.readFileSync(filepath), sandbox);
+  compiler = compiler || fs.readFileSync;
+  vm.runInNewContext(compiler(filepath), sandbox);
 
   return sandbox.module.exports;
 };
