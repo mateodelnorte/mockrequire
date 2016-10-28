@@ -2,7 +2,7 @@
   "author": "Matt Walters <mattwalters5@gmail.com>",
   "name": "mockrequire",
   "description": "Simple module for mocking required dependencies. Works with any testing suite.",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "homepage": "https://github.com/mateodelnorte/mockrequire",
   "repository": {
     "type": "git",
