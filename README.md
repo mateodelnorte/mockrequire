@@ -3,7 +3,7 @@
 Simple module for mocking required dependencies. Works with any testing suite. (https://github.com/mateodelnorte/mockrequire).
 
 
-### Example Usage
+### Example Usage 
 
 Imagine your application uses the following module to onboard a user, in reaction to a recieved event. A service will require the module and call it, passing the event as a parameter. But, in the course of developing your application, you'd like to test the module in isolation from the rest of your code. The module depends on another module, 'my_db_lib'. 
 
