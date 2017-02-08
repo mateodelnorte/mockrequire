@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mateodelnorte/mockrequire.svg?branch=master)](https://travis-ci.org/mateodelnorte/mockrequire)
+
 # MockRequire
 
 Simple module for mocking required dependencies. Works with any testing suite. (https://github.com/mateodelnorte/mockrequire).
