@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mateodelnorte/mockrequire.svg?branch=master)](https://travis-ci.org/mateodelnorte/mockrequire)
+[![Build Status](https://travis-ci.org/mateodelnorte/mockrequire.svg?branch=master)](https://travis-ci.org/mateodelnorte/mockrequire) [![Greenkeeper badge](https://badges.greenkeeper.io/mateodelnorte/mockrequire.svg)](https://greenkeeper.io/)
 
 # MockRequire
 
