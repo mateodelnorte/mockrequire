@@ -13,12 +13,12 @@
     "node": "~0.6.9"
   },
   "dependencies": {
-    "debug": "0.7.2",
-    "stack-trace": "0.0.9"
+    "debug": "4.1.0",
+    "stack-trace": "0.0.10"
   },
   "devDependencies": {
-    "mocha": "1.9.0",
-    "should": "1.2.2"
+    "mocha": "5.2.0",
+    "should": "13.2.3"
   },
   "scripts": {
     "test": "mocha -R spec"
