@@ -68,7 +68,9 @@ module.exports = function (module, mocks, compiler) {
 
   log('mockrequiring ' + filepath);
   compiler = compiler || fs.readFileSync;
-  vm.runInNewContext(compiler(filepath), sandbox);
+  vm.runInNewContext(compiler(filepath), sandbox, {
+      filename: filepath
+  });
 
   return sandbox.module.exports;
 };
