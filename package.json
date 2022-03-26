@@ -13,7 +13,7 @@
     "node": "~0.12.0"
   },
   "dependencies": {
-    "debug": "4.1.1",
+    "debug": "4.3.4",
     "stack-trace": "0.0.10"
   },
   "devDependencies": {
